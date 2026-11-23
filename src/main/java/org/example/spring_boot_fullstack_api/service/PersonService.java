@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.example.spring_boot_fullstack_api.dto.PersonRequest;
 import org.example.spring_boot_fullstack_api.dto.PersonResponse;
 import org.example.spring_boot_fullstack_api.entity.Person;
+import org.example.spring_boot_fullstack_api.exception.DuplicateResourceException;
 import org.example.spring_boot_fullstack_api.exception.ResourceNotFoundException;
 import org.example.spring_boot_fullstack_api.repository.PersonRepository;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,10 @@ public class PersonService {
     @Transactional
     public PersonResponse createPerson(PersonRequest request) {
 
+        if (personRepository.existsByEmail(request.email())) {
+            throw new DuplicateResourceException("A person with this email already exists");
+        }
+
         Person person = new Person();
 
         person.setName(request.name());
@@ -36,6 +41,15 @@ public class PersonService {
     public PersonResponse updatePerson(Long id, PersonRequest request) {
 
         Person person = findPersonByIdOrThrow(id);
+
+        boolean emailUsedByAnotherPerson = personRepository.existsByEmailAndIdNot(
+                request.email(),
+                id
+        );
+
+        if (emailUsedByAnotherPerson) {
+            throw new DuplicateResourceException("Another person is already using this email");
+        }
 
         person.setName(request.name());
         person.setEmail(request.email());
