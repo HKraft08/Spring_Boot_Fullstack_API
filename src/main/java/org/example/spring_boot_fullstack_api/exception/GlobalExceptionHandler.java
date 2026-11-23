@@ -18,6 +18,12 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(HttpStatus.NOT_FOUND, exception.getMessage());
     }
 
+    @ExceptionHandler(DuplicateResourceException.class)
+    public ResponseEntity<Map<String, Object>> handleDuplicate (DuplicateResourceException exception) {
+
+        return buildErrorResponse(HttpStatus.CONFLICT, exception.getMessage());
+    }
+
     private ResponseEntity<Map<String, Object>> buildErrorResponse(HttpStatus status, String message) {
 
         Map<String, Object> body = new LinkedHashMap<>();
