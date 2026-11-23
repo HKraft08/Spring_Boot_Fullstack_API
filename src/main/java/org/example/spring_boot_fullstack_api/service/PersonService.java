@@ -1,13 +1,12 @@
 package org.example.spring_boot_fullstack_api.service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.example.spring_boot_fullstack_api.dto.PersonRequest;
 import org.example.spring_boot_fullstack_api.dto.PersonResponse;
 import org.example.spring_boot_fullstack_api.entity.Person;
 import org.example.spring_boot_fullstack_api.exception.DuplicateResourceException;
 import org.example.spring_boot_fullstack_api.exception.ResourceNotFoundException;
 import org.example.spring_boot_fullstack_api.repository.PersonRepository;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,6 +34,15 @@ public class PersonService {
         Person savePerson = personRepository.save(person);
 
         return mapToResponse(savePerson);
+    }
+
+    //Read one
+    @Transactional(readOnly = true)
+    public PersonResponse getPersonById(Long id) {
+
+        Person person = findPersonByIdOrThrow(id);
+
+        return mapToResponse(person);
     }
 
     //Update

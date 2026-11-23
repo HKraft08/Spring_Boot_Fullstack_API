@@ -29,6 +29,13 @@ public class PersonController {
                 .body(response);
     }
 
+    //Read one
+    @GetMapping("/{id}")
+    public ResponseEntity<PersonResponse> getPersonById(@PathVariable Long id) {
+
+        return ResponseEntity.ok(personService.getPersonById(id));
+    }
+
     //Update
     @PutMapping("/{id}")
     public ResponseEntity<PersonResponse> updatePerson(
