@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.example.spring_boot_fullstack_api.dto.PersonRequest;
 import org.example.spring_boot_fullstack_api.dto.PersonResponse;
 import org.example.spring_boot_fullstack_api.entity.Person;
+import org.example.spring_boot_fullstack_api.exception.ResourceNotFoundException;
 import org.example.spring_boot_fullstack_api.repository.PersonRepository;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,26 @@ public class PersonService {
         Person savePerson = personRepository.save(person);
 
         return mapToResponse(savePerson);
+    }
+
+    //Update
+    @Transactional
+    public PersonResponse updatePerson(Long id, PersonRequest request) {
+
+        Person person = findPersonByIdOrThrow(id);
+
+        person.setName(request.name());
+        person.setEmail(request.email());
+
+        Person updatedPerson = personRepository.save(person);
+
+        return mapToResponse(updatedPerson);
+    }
+
+    private Person findPersonByIdOrThrow(Long id) {
+
+        return personRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Person not found with ID: " + id));
     }
 
     private PersonResponse mapToResponse(Person person) {

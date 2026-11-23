@@ -6,10 +6,7 @@ import org.example.spring_boot_fullstack_api.dto.PersonResponse;
 import org.example.spring_boot_fullstack_api.service.PersonService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("api/v1/person")
@@ -29,5 +26,12 @@ public class PersonController {
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<PersonResponse> updatePerson(
+            @PathVariable Long id, @Valid @RequestBody PersonRequest request) {
+
+        return ResponseEntity.ok(personService.updatePerson(id, request));
     }
 }
