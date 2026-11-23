@@ -18,6 +18,7 @@ public class PersonController {
         this.personService = personService;
     }
 
+    //Create
     @PostMapping
     public ResponseEntity<PersonResponse> createPerson(@Valid @RequestBody PersonRequest request) {
 
@@ -28,10 +29,20 @@ public class PersonController {
                 .body(response);
     }
 
+    //Update
     @PutMapping("/{id}")
     public ResponseEntity<PersonResponse> updatePerson(
             @PathVariable Long id, @Valid @RequestBody PersonRequest request) {
 
         return ResponseEntity.ok(personService.updatePerson(id, request));
+    }
+
+    //Delete
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletePerson(@PathVariable Long id) {
+
+        personService.deletePerson(id);
+
+        return ResponseEntity.noContent().build();
     }
 }

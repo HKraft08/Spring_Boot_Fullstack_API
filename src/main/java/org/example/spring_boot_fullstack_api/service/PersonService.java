@@ -7,6 +7,7 @@ import org.example.spring_boot_fullstack_api.entity.Person;
 import org.example.spring_boot_fullstack_api.exception.DuplicateResourceException;
 import org.example.spring_boot_fullstack_api.exception.ResourceNotFoundException;
 import org.example.spring_boot_fullstack_api.repository.PersonRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -57,6 +58,15 @@ public class PersonService {
         Person updatedPerson = personRepository.save(person);
 
         return mapToResponse(updatedPerson);
+    }
+
+    //Delete
+    @Transactional
+    public void deletePerson(Long id) {
+
+        Person person = findPersonByIdOrThrow(id);
+
+        personRepository.delete(person);
     }
 
     private Person findPersonByIdOrThrow(Long id) {
